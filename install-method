@@ -1,0 +1,53 @@
+#!/usr/bin/node
+
+const install = require("./install.js")
+
+const fs = require("fs")
+
+const sproc = require("child_process")
+let basic_compiler = "";
+let basic_files = "";
+let name = "";
+let basic_options = "";
+if (process.argv[2] == '-v') {
+    console.log("1.0 Install")
+} else {
+    if (process.argv[2][0] == '-') {
+        console.log("install: log: unknown option")
+    } else {
+        let file = process.argv[2]
+        let out = "" + fs.readFileSync(file);
+
+        let stats = out.split(';')
+        // console.log(stats)
+        stats.forEach(Stat => {
+            let ast = install.compile(Stat.trim())
+
+            // console.log(Stat)
+
+            if (Stat.length < 0) return;
+            else {
+
+                if (ast["compiler"] != null) {
+                    // console.log(ast)
+                    basic_compiler = ast["compiler"]
+                }
+                else if (ast["file"] != null) {
+                    basic_files = ast["file"]
+                }
+                else if (ast["option"] != null) {
+                    // console.log('found opts')
+                    basic_options = ast["option"]
+                } else if (ast["name"] != null) {
+                    name = ast["name"]
+                }
+            }
+        });
+
+        if (basic_options[0] != null) {
+        console.log(basic_compiler[0] + "" + " " + basic_files[0] + " " + basic_options[0] + " && echo 'Generated project command setup \"" + name + "\" using Install manager.'")
+        } else {
+        console.log(basic_compiler[0] + "" + " " + basic_files[0])
+        }
+    }
+}

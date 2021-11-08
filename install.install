@@ -1,0 +1,7 @@
+name -> 'Install Script Manager';
+
+option -> '-v';
+
+file -> 'test.js';
+
+compiler -> 'node';
